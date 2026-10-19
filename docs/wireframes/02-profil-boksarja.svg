@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" font-family="sans-serif">
+  <rect x="0" y="0" width="900" height="640" fill="white" stroke="#999"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="900" height="56" fill="#eee" stroke="#333"/>
+  <text x="20" y="35" font-size="20" font-weight="bold">BoxRank</text>
+  <text x="600" y="33" font-size="14">Boksarji</text>
+  <text x="700" y="33" font-size="14">Dogodki</text>
+  <text x="800" y="33" font-size="14">Prijava</text>
+
+  <!-- Photo placeholder -->
+  <rect x="20" y="80" width="140" height="140" fill="#eee" stroke="#333"/>
+  <text x="55" y="155" font-size="12" fill="#777">foto</text>
+
+  <!-- Name / club / weight class / status -->
+  <text x="180" y="100" font-size="22" font-weight="bold">Ime Priimek</text>
+  <text x="180" y="125" font-size="14" fill="#555">Klub: Boxing Club XY</text>
+  <text x="180" y="145" font-size="14" fill="#555">Kategorija: Welter</text>
+  <rect x="180" y="158" width="90" height="24" fill="#dff0d8" stroke="#3c763d"/>
+  <text x="192" y="175" font-size="12" fill="#3c763d">Aktiven</text>
+
+  <!-- Current rating box -->
+  <rect x="650" y="80" width="230" height="90" fill="#f7f7f7" stroke="#333"/>
+  <text x="665" y="105" font-size="13" fill="#555">Trenutni rating</text>
+  <text x="665" y="150" font-size="34" font-weight="bold">1482</text>
+
+  <!-- Rating history chart -->
+  <text x="20" y="245" font-size="16" font-weight="bold">Gibanje ratinga skozi čas</text>
+  <rect x="20" y="260" width="860" height="160" fill="white" stroke="#333"/>
+  <polyline points="40,400 150,370 260,380 370,330 480,340 590,300 700,310 840,270"
+            fill="none" stroke="#555" stroke-width="2"/>
+  <circle cx="40" cy="400" r="3"/><circle cx="150" cy="370" r="3"/>
+  <circle cx="260" cy="380" r="3"/><circle cx="370" cy="330" r="3"/>
+  <circle cx="480" cy="340" r="3"/><circle cx="590" cy="300" r="3"/>
+  <circle cx="700" cy="310" r="3"/><circle cx="840" cy="270" r="3"/>
+
+  <!-- Tabs -->
+  <rect x="20" y="440" width="220" height="36" fill="#ddd" stroke="#333"/>
+  <text x="40" y="463" font-size="13" font-weight="bold">Zgodovina dvobojev</text>
+  <rect x="240" y="440" width="220" height="36" fill="white" stroke="#333"/>
+  <text x="260" y="463" font-size="13">Predlagani nasprotniki</text>
+
+  <!-- Fight history table -->
+  <rect x="20" y="476" width="860" height="40" fill="#ddd" stroke="#333"/>
+  <text x="35" y="500" font-size="12" font-weight="bold">Datum</text>
+  <text x="150" y="500" font-size="12" font-weight="bold">Nasprotnik</text>
+  <text x="400" y="500" font-size="12" font-weight="bold">Dogodek</text>
+  <text x="600" y="500" font-size="12" font-weight="bold">Način</text>
+  <text x="730" y="500" font-size="12" font-weight="bold">Izid</text>
+
+  <g fill="#ccc">
+    <rect x="20" y="516" width="860" height="40" fill="white" stroke="#ccc"/>
+    <rect x="35" y="531" width="80" height="12"/>
+    <rect x="150" y="531" width="200" height="12"/>
+    <rect x="400" y="531" width="150" height="12"/>
+    <rect x="600" y="531" width="90" height="12"/>
+    <rect x="730" y="531" width="60" height="12"/>
+
+    <rect x="20" y="556" width="860" height="40" fill="white" stroke="#ccc"/>
+    <rect x="35" y="571" width="80" height="12"/>
+    <rect x="150" y="571" width="200" height="12"/>
+    <rect x="400" y="571" width="150" height="12"/>
+    <rect x="600" y="571" width="90" height="12"/>
+    <rect x="730" y="571" width="60" height="12"/>
+  </g>
+</svg>

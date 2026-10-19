@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" font-family="sans-serif">
+  <rect x="0" y="0" width="900" height="640" fill="white" stroke="#999"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="900" height="56" fill="#eee" stroke="#333"/>
+  <text x="20" y="35" font-size="20" font-weight="bold">BoxRank</text>
+  <text x="600" y="33" font-size="14">Moj klub</text>
+  <text x="700" y="33" font-size="14">Boksarji</text>
+  <text x="800" y="33" font-size="14">Odjava</text>
+
+  <!-- Title -->
+  <text x="20" y="100" font-size="22" font-weight="bold">Nov predlog dvoboja</text>
+
+  <!-- Form -->
+  <g font-size="13" fill="#555">
+    <text x="20" y="140">Boksar 1</text>
+    <rect x="20" y="148" width="400" height="36" fill="white" stroke="#333"/>
+    <text x="32" y="171" fill="#999">Izberi boksarja ▾</text>
+
+    <text x="460" y="140">Boksar 2 (nasprotnik)</text>
+    <rect x="460" y="148" width="400" height="36" fill="white" stroke="#333"/>
+    <text x="472" y="171" fill="#999">Izberi boksarja ▾</text>
+
+    <text x="20" y="210">Kategorija teže</text>
+    <rect x="20" y="218" width="260" height="36" fill="#f2f2f2" stroke="#333"/>
+    <text x="32" y="241" fill="#999">Welter (samodejno)</text>
+
+    <text x="300" y="210">Datum dvoboja</text>
+    <rect x="300" y="218" width="260" height="36" fill="white" stroke="#333"/>
+    <text x="312" y="241" fill="#999">dd.mm.llll</text>
+
+    <text x="580" y="210">Dogodek</text>
+    <rect x="580" y="218" width="280" height="36" fill="white" stroke="#333"/>
+    <text x="592" y="241" fill="#999">Ime dogodka</text>
+
+    <text x="20" y="280">Način zmage</text>
+    <rect x="20" y="288" width="260" height="36" fill="white" stroke="#333"/>
+    <text x="32" y="311" fill="#999">KO / TKO / Odločitev / Neodločeno ▾</text>
+
+    <text x="300" y="280">Zmagovalec</text>
+    <rect x="300" y="288" width="260" height="36" fill="white" stroke="#333"/>
+    <text x="312" y="311" fill="#999">Izberi zmagovalca ▾</text>
+  </g>
+
+  <!-- Status note -->
+  <rect x="20" y="350" width="840" height="40" fill="#fcf8e3" stroke="#8a6d3b"/>
+  <text x="32" y="374" font-size="12" fill="#8a6d3b">
+    Po oddaji bo dvoboj dobil status "v potrjevanju" – rating se spremeni šele po potrditvi admina.
+  </text>
+
+  <!-- Buttons -->
+  <rect x="20" y="410" width="160" height="42" fill="#333"/>
+  <text x="50" y="436" font-size="14" fill="white">Oddaj predlog</text>
+  <rect x="195" y="410" width="120" height="42" fill="white" stroke="#333"/>
+  <text x="225" y="436" font-size="14">Prekliči</text>
+</svg>
