@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  promoter
+  boxer
+}
+
+enum BoxerStatus {
+  active
+  suspended
+}
+
+enum FightResult {
+  KO
+  TKO
+  decision
+  draw
+}
+
+enum FightStatus {
+  pending
+  confirmed
+  rejected
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+
+  promoterClub Club?
+  boxerProfile Boxer?
+}
+
+model Club {
+  id         Int     @id @default(autoincrement())
+  name       String
+  location   String
+  promoterId Int     @unique
+  promoter   User    @relation(fields: [promoterId], references: [id])
+  boxers     Boxer[]
+}
+
+model WeightClass {
+  id        Int     @id @default(autoincrement())
+  name      String  @unique
+  minWeight Float
+  maxWeight Float
+  boxers    Boxer[]
+}
+
+model Boxer {
+  id            Int         @id @default(autoincrement())
+  userId        Int?        @unique
+  user          User?       @relation(fields: [userId], references: [id])
+  firstName     String
+  lastName      String
+  dateOfBirth   DateTime
+  clubId        Int
+  club          Club        @relation(fields: [clubId], references: [id])
+  weightClassId Int
+  weightClass   WeightClass @relation(fields: [weightClassId], references: [id])
+  currentRating Int         @default(1000)
+  status        BoxerStatus @default(active)
+  suspendReason String?
+  photoUrl      String?
+
+  fightsAsBoxer1  Fight[]         @relation("Boxer1")
+  fightsAsBoxer2  Fight[]         @relation("Boxer2")
+  wonFights       Fight[]         @relation("Winner")
+  ratingHistory   RatingHistory[]
+}
+
+model Event {
+  id       Int      @id @default(autoincrement())
+  name     String
+  date     DateTime
+  location String
+  fights   Fight[]
+}
+
+model Fight {
+  id            Int         @id @default(autoincrement())
+  boxer1Id      Int
+  boxer1        Boxer       @relation("Boxer1", fields: [boxer1Id], references: [id])
+  boxer2Id      Int
+  boxer2        Boxer       @relation("Boxer2", fields: [boxer2Id], references: [id])
+  eventId       Int
+  event         Event       @relation(fields: [eventId], references: [id])
+  date          DateTime
+  result        FightResult
+  winnerId      Int?
+  winner        Boxer?      @relation("Winner", fields: [winnerId], references: [id])
+  status        FightStatus @default(pending)
+  rejectReason  String?
+  submittedById Int
+  createdAt     DateTime    @default(now())
+
+  ratingHistory RatingHistory[]
+}
+
+model RatingHistory {
+  id            Int      @id @default(autoincrement())
+  boxerId       Int
+  boxer         Boxer    @relation(fields: [boxerId], references: [id])
+  fightId       Int
+  fight         Fight    @relation(fields: [fightId], references: [id])
+  ratingBefore  Int
+  ratingAfter   Int
+  createdAt     DateTime @default(now())
+}
