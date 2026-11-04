@@ -1,6 +1,6 @@
 import { useEffect, useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { clubs, boxers, fights, events, weightClasses, Boxer, WeightClass, Event } from '../api';
+import { clubs, boxers, fights, events, weightClasses, rankings, Boxer, WeightClass, Event, Suggestion } from '../api';
 import { useAuth } from '../context/AuthContext';
 
 export default function PromoterDashboard() {
@@ -17,6 +17,7 @@ export default function PromoterDashboard() {
 
   // Submit fight form
   const [fightForm, setFightForm] = useState({ boxer1Id: '', boxer2Id: '', eventId: '', date: '', result: 'KO', winnerId: '' });
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 
   // Add event form
   const [eventForm, setEventForm] = useState({ name: '', date: '', location: '' });
@@ -48,6 +49,16 @@ export default function PromoterDashboard() {
       clubs.getBoxers(myClubId).then(r => setMyBoxers(r.data));
     } catch (err: any) {
       setMsg(err.response?.data?.message ?? 'Napaka.');
+    }
+  };
+
+  const handleBoxer1Change = (boxer1Id: string) => {
+    setFightForm(f => ({ ...f, boxer1Id, boxer2Id: '', winnerId: '' }));
+    setSuggestions([]);
+    if (boxer1Id) {
+      rankings.getSuggestions(parseInt(boxer1Id))
+        .then(r => setSuggestions(r.data))
+        .catch(() => setSuggestions([]));
     }
   };
 
@@ -125,46 +136,71 @@ export default function PromoterDashboard() {
 
       {tab === 'fight' && (
         <form onSubmit={handleSubmitFight} className="form">
-          <label>Boksar 1
-            <select value={fightForm.boxer1Id} onChange={e => setFightForm({ ...fightForm, boxer1Id: e.target.value })} required>
-              <option value="">Izberi...</option>
-              {myBoxers.map(b => <option key={b.id} value={b.id}>{b.firstName} {b.lastName}</option>)}
+          <label>Boksar 1 (iz vašega kluba)
+            <select value={fightForm.boxer1Id} onChange={e => handleBoxer1Change(e.target.value)} required>
+              <option value="">Izberi boksarja...</option>
+              {myBoxers.filter(b => b.status === 'active').map(b => (
+                <option key={b.id} value={b.id}>{b.firstName} {b.lastName} – {b.weightClass.name} (rating: {b.currentRating})</option>
+              ))}
             </select>
           </label>
-          <label>Boksar 2 (ID nasprotnika)
-            <input type="number" value={fightForm.boxer2Id} onChange={e => setFightForm({ ...fightForm, boxer2Id: e.target.value })} required placeholder="ID boksarja" />
+
+          <label>Boksar 2 (nasprotnik)
+            {!fightForm.boxer1Id
+              ? <select disabled><option>Najprej izberi Boksarja 1</option></select>
+              : suggestions.length === 0
+                ? <select disabled><option>Ni primernih nasprotnikov iste kategorije</option></select>
+                : <select value={fightForm.boxer2Id} onChange={e => setFightForm(f => ({ ...f, boxer2Id: e.target.value, winnerId: '' }))} required>
+                    <option value="">Izberi nasprotnika...</option>
+                    {suggestions.map(s => (
+                      <option key={s.id} value={s.id}>
+                        {s.firstName} {s.lastName} – {s.club.name} (rating: {s.currentRating}, razlika: {s.ratingDiff})
+                        {s.recentFightDate ? ' ⚠ nastopil nedavno' : ''}
+                      </option>
+                    ))}
+                  </select>
+            }
           </label>
+
           <label>Dogodek
-            <select value={fightForm.eventId} onChange={e => setFightForm({ ...fightForm, eventId: e.target.value })} required>
+            <select value={fightForm.eventId} onChange={e => setFightForm(f => ({ ...f, eventId: e.target.value }))} required>
               <option value="">Izberi...</option>
-              {eventList.map(ev => <option key={ev.id} value={ev.id}>{ev.name}</option>)}
+              {eventList.map(ev => <option key={ev.id} value={ev.id}>{ev.name} – {new Date(ev.date).toLocaleDateString('sl-SI')}</option>)}
             </select>
           </label>
+
           <label>Datum dvoboja
-            <input type="datetime-local" value={fightForm.date} onChange={e => setFightForm({ ...fightForm, date: e.target.value })} required />
+            <input type="datetime-local" value={fightForm.date} onChange={e => setFightForm(f => ({ ...f, date: e.target.value }))} required />
           </label>
+
           <label>Izid
-            <select value={fightForm.result} onChange={e => setFightForm({ ...fightForm, result: e.target.value, winnerId: '' })}>
+            <select value={fightForm.result} onChange={e => setFightForm(f => ({ ...f, result: e.target.value, winnerId: '' }))}>
               <option value="KO">KO</option>
               <option value="TKO">TKO</option>
-              <option value="decision">Odločitev</option>
+              <option value="decision">Odločitev sodnikov</option>
               <option value="draw">Neodločeno</option>
             </select>
           </label>
+
           {fightForm.result !== 'draw' && (
             <label>Zmagovalec
-              <select value={fightForm.winnerId} onChange={e => setFightForm({ ...fightForm, winnerId: e.target.value })} required>
-                <option value="">Izberi...</option>
-                {fightForm.boxer1Id && myBoxers.find(b => b.id === parseInt(fightForm.boxer1Id)) && (
-                  <option value={fightForm.boxer1Id}>
-                    {myBoxers.find(b => b.id === parseInt(fightForm.boxer1Id))?.firstName} (Boksar 1)
-                  </option>
-                )}
-                {fightForm.boxer2Id && <option value={fightForm.boxer2Id}>Boksar 2 (ID: {fightForm.boxer2Id})</option>}
+              <select value={fightForm.winnerId} onChange={e => setFightForm(f => ({ ...f, winnerId: e.target.value }))} required>
+                <option value="">Izberi zmagovalca...</option>
+                {fightForm.boxer1Id && (() => {
+                  const b = myBoxers.find(b => b.id === parseInt(fightForm.boxer1Id));
+                  return b ? <option value={b.id}>{b.firstName} {b.lastName} (Boksar 1)</option> : null;
+                })()}
+                {fightForm.boxer2Id && (() => {
+                  const s = suggestions.find(s => s.id === parseInt(fightForm.boxer2Id));
+                  return s ? <option value={s.id}>{s.firstName} {s.lastName} (Boksar 2)</option> : null;
+                })()}
               </select>
             </label>
           )}
-          <button type="submit" className="btn btn-primary">Oddaj predlog</button>
+
+          <button type="submit" className="btn btn-primary" disabled={!fightForm.boxer1Id || !fightForm.boxer2Id}>
+            Oddaj predlog dvoboja
+          </button>
         </form>
       )}
 
