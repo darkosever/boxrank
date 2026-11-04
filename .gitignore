@@ -31,3 +31,6 @@ backend/prisma/dev.db
 
 # Moodle oddaje (zip arhivi)
 *.zip
+
+# Navodila za naloge
+navodila.txt
