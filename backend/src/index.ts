@@ -7,6 +7,7 @@ import clubRouter from './routes/club.routes';
 import boxerRouter from './routes/boxer.routes';
 import eventRouter from './routes/event.routes';
 import fightRouter from './routes/fight.routes';
+import rankingRouter from './routes/ranking.routes';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -24,6 +25,7 @@ app.use('/clubs', clubRouter);
 app.use('/boxers', boxerRouter);
 app.use('/events', eventRouter);
 app.use('/fights', fightRouter);
+app.use('/rankings', rankingRouter);
 
 app.listen(PORT, () => {
   console.log(`Backend teče na http://localhost:${PORT}`);
