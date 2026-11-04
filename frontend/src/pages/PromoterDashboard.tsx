@@ -24,34 +24,14 @@ export default function PromoterDashboard() {
   useEffect(() => {
     weightClasses.getAll().then(r => setClasses(r.data));
     events.getAll().then(r => setEventList(r.data));
-
-    // find promoter's club by loading their boxers (club is linked to promoter account)
-    // We get club info via /clubs — but we need to know our club id
-    // The API gives club info when we load boxers via the club endpoint
-    // Workaround: search all boxers with no filters, find one that belongs to our club
-    // Better: we'll try to load club 1 first (seed), then check promoterId
-    // Actually best approach: the token contains promoter id, the backend links club to promoter
-    // We'll use the boxers search but check the club endpoint for each promoter
-    // Simple approach: try loading known clubs by id until we find ours
-    // For now: load boxers from /boxers and check which have our promoter's club
-    // The correct way: add GET /clubs/my on backend — but we didn't do that
-    // Workaround: load /boxers with no filter, then check club by promoterId match from token
-    // Since we don't have /clubs/my, we'll try GET /clubs/1 and /clubs/2 to find ours
-    tryFindMyClub();
+    clubs.getMy()
+      .then(r => {
+        setMyClubId(r.data.id);
+        return clubs.getBoxers(r.data.id);
+      })
+      .then(r => setMyBoxers(r.data))
+      .catch(() => setMsg('Nimate dodeljenega kluba. Kontaktirajte admina.'));
   }, []);
-
-  const tryFindMyClub = async () => {
-    for (let id = 1; id <= 20; id++) {
-      try {
-        const r = await clubs.getById(id);
-        if (r.data.promoter?.id === user?.id) {
-          setMyClubId(id);
-          clubs.getBoxers(id).then(res => setMyBoxers(res.data));
-          return;
-        }
-      } catch { /* continue */ }
-    }
-  };
 
   const handleAddBoxer = async (e: FormEvent) => {
     e.preventDefault();

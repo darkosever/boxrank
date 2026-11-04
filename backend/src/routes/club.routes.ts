@@ -11,6 +11,15 @@ const updateSchema = z.object({
   location: z.string().min(1),
 });
 
+// GET /clubs/my – promotorjev lasten klub
+router.get('/my', authenticate, requireRole(Role.promoter), async (req: Request, res: Response): Promise<void> => {
+  try {
+    res.json(await svc.getMyClub(req.user!.id));
+  } catch (err: any) {
+    res.status(err.status ?? 500).json({ message: err.message });
+  }
+});
+
 // GET /clubs/:id
 router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   try {
