@@ -1,5 +1,14 @@
 import prisma from '../prisma';
 
+export async function getMyClub(promoterId: number) {
+  const club = await prisma.club.findUnique({
+    where: { promoterId },
+    include: { promoter: { select: { id: true, email: true } } },
+  });
+  if (!club) throw Object.assign(new Error('Nimate dodeljenega kluba.'), { status: 404 });
+  return club;
+}
+
 export async function getById(id: number) {
   const club = await prisma.club.findUnique({
     where: { id },

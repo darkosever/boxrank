@@ -26,6 +26,7 @@ export const boxers = {
 
 export const clubs = {
   getById: (id: number) => api.get<Club>(`/clubs/${id}`),
+  getMy: () => api.get<Club>('/clubs/my'),
   update: (id: number, data: { name: string; location: string }) => api.put(`/clubs/${id}`, data),
   getBoxers: (id: number) => api.get<Boxer[]>(`/clubs/${id}/boxers`),
 };
